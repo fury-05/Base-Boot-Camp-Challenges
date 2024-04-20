@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract BasicMath {
+    // Function to add two uints safely
+    function adder(uint _a, uint _b) public pure returns (uint sum, bool error) {
+        unchecked {
+            sum = _a + _b;
+            if (sum < _a || sum < _b) {
+                // Overflow occurred
+                return (0, true);
+            }
+        }
+        // If no overflow, return sum and error as false
+        return (sum, false);
+    }
+
+    // Function to subtract two uints safely
+    function subtractor(uint _a, uint _b) public pure returns (uint difference, bool error) {
+        if (_a < _b) {
+            // Underflow occurred
+            return (0, true);
+        }
+        // Safe subtraction, no underflow
+        difference = _a - _b;
+        return (difference, false);
+    }
+}
