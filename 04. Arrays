@@ -1,0 +1,67 @@
+// SPDX-License-Identifier: MIT 
+
+pragma solidity ^0.8.0;
+
+contract ArraysExercise {
+    uint[] public numbers = [1,2,3,4,5,6,7,8,9,10];
+    address[] public senders;
+    uint[] public timestamps;
+
+    function getNumbers() public view returns (uint[] memory) {
+        return numbers;
+    }
+
+    function resetNumbers() public {
+        numbers = [1,2,3,4,5,6,7,8,9,10];
+    }
+
+    function appendToNumbers(uint[] calldata _toAppend) public {
+        uint[] memory newNumbers = new uint[](numbers.length + _toAppend.length);
+        for (uint i = 0; i < numbers.length; i++) {
+            newNumbers[i] = numbers[i];
+        }
+        for (uint i = 0; i < _toAppend.length; i++) {
+            newNumbers[numbers.length + i] = _toAppend[i];
+        }
+        numbers = newNumbers;
+    }
+
+    function saveTimestamp(uint _unixTimestamp) public {
+        senders.push(msg.sender);
+        timestamps.push(_unixTimestamp);
+    }
+
+    function afterY2K() public view returns (uint[] memory, address[] memory) {
+        uint[] storage recentTimestamps = timestamps;
+        address[] storage recentSenders = senders;
+        uint[] memory filteredTimestamps = new uint[](recentTimestamps.length);
+        address[] memory filteredSenders = new address[](recentSenders.length);
+        uint count = 0;
+
+        for (uint i = 0; i < recentTimestamps.length; i++) {
+            if (recentTimestamps[i] > 946702800) {
+                filteredTimestamps[count] = recentTimestamps[i];
+                filteredSenders[count] = recentSenders[i];
+                count++;
+            }
+        }
+
+        uint[] memory filteredTimestampsTrimmed = new uint[](count);
+        address[] memory filteredSendersTrimmed = new address[](count);
+
+        for (uint i = 0; i < count; i++) {
+            filteredTimestampsTrimmed[i] = filteredTimestamps[i];
+            filteredSendersTrimmed[i] = filteredSenders[i];
+        }
+
+        return (filteredTimestampsTrimmed, filteredSendersTrimmed);
+    }
+
+    function resetSenders() public {
+        delete senders;
+    }
+
+    function resetTimestamps() public {
+        delete timestamps;
+    }
+}
